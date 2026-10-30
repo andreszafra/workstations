@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import { UserCog, Shield, Lock, Building2, Palette, Wrench } from 'lucide-react';
+import { UserCog, Shield, Lock, Building2, Palette, Wrench, Database } from 'lucide-react';
 import UserAdministration from './UserAdministration';
 import RolesManagement from './RolesManagement';
 import SecurityGroupsManagement from './SecurityGroupsManagement';
 import CompaniesManagement from './CompaniesManagement';
 import InterfaceManagement from './InterfaceManagement';
 import SystemRepair from './SystemRepair';
+import DataExport from './DataExport';
 import { authService } from '../lib/authorization';
 import { supabase } from '../lib/supabase';
 import { MODULE_KEYS } from '../lib/moduleKeys';
 
-type AdminView = 'users' | 'roles' | 'security_groups' | 'companies' | 'interface' | 'repair';
+type AdminView = 'users' | 'roles' | 'security_groups' | 'companies' | 'interface' | 'repair' | 'export';
 
 export default function Administration() {
   const [allowedModules, setAllowedModules] = useState<Set<string>>(new Set());
@@ -44,11 +45,13 @@ export default function Administration() {
     { id: 'companies', label: 'Compañías', icon: Building2, moduleKey: 'companies' },
     { id: 'interface', label: 'Interfaz', icon: Palette, moduleKey: MODULE_KEYS.settings },
     { id: 'repair', label: 'Reparación del Sistema', icon: Wrench, moduleKey: 'system_repair' },
+    { id: 'export', label: 'Exportar Datos', icon: Database, moduleKey: 'data_export' },
   ];
 
   const nav = allNavItems.filter(item =>
     item.moduleKey === 'companies' ||
     item.moduleKey === 'system_repair' ||
+    item.moduleKey === 'data_export' ||
     allowedModules.has(item.moduleKey)
   );
 
@@ -119,6 +122,7 @@ export default function Administration() {
             {view === 'companies' && <CompaniesManagement />}
             {view === 'interface' && <InterfaceManagement />}
             {view === 'repair' && <SystemRepair />}
+            {view === 'export' && <DataExport />}
           </div>
         </main>
       </div>
